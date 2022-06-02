@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF9ec1a3),
+      backgroundColor: Styles.firstColor,
       body: Center(
 
         child: Column(
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Color(0xFF881699)),
+                        backgroundColor: MaterialStateProperty.all(Styles.secondColor),
                       ),
                       onPressed: () {
                         Navigator.push(

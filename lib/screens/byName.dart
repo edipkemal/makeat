@@ -12,33 +12,20 @@ class byName extends StatefulWidget  {
 }
 
 class _byNameState extends State<byName>{
-  int _counter = 0;
-  bool showRaisedButtonBadge = true;
+  //int _counter = 0;
+  //bool showRaisedButtonBadge = true;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-
-          title: Image.asset('images/transparent-logo.png',scale:5),
-          centerTitle: true,
-          backgroundColor: Color(0xFF9ec1a3),
-          actions: <Widget>[
-            _shoppingCartBadge(),
-
-          ],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: mAppBar(),
         ),
+
+
         body: Column(
           children: <Widget>[
             _addRemoveCartButtons(),
@@ -84,7 +71,7 @@ class _byNameState extends State<byName>{
         RaisedButton.icon(
             onPressed: () {
               setState(() {
-                Styles.counter ++;
+                Styles().increase();
               });
             },
             icon: Icon(Icons.add),
@@ -105,13 +92,11 @@ class _byNameState extends State<byName>{
           ),
         ) ,
 
-        RaisedButton.icon(
+        ElevatedButton.icon(
             onPressed: () {
-              if (Styles.counter > 0) {
-                setState(() {
-                  Styles.counter--;
-                });
-              }
+              setState(() {
+                Styles().decrease();
+              });
             },
             icon: Icon(Icons.remove),
             label: Text('')),
