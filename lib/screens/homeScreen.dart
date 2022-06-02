@@ -3,6 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:badges/badges.dart';
+import 'package:makeat_mobile/main.dart';
+import 'package:makeat_mobile/screens/about.dart';
+import 'package:makeat_mobile/screens/contact.dart';
 import 'byName.dart';
 import 'byIngredient.dart';
 import '../style/styles.dart';
@@ -75,7 +78,10 @@ class HomeScreen extends StatelessWidget {
                           foregroundColor: MaterialStateProperty.all(Color(0xFF881699)),
                         ),
                         onPressed: (){
-                          Navigator.pushNamed(context, '/second');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => About()),
+                          );
                         },
                         child: const Text("About"),
                       ),
@@ -87,7 +93,10 @@ class HomeScreen extends StatelessWidget {
                           foregroundColor: MaterialStateProperty.all(Color(0xFF881699)),
                         ),
                         onPressed: (){
-                          Navigator.pushNamed(context, '/second');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Contact()),
+                          );
                         },
                         child: const Text("Contact"),
                       ),

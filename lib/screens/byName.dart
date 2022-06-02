@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:makeat_mobile/main.dart';
+import 'package:makeat_mobile/style/styles.dart';
 import 'homeScreen.dart';
 
 class byName extends StatefulWidget  {
@@ -13,16 +14,14 @@ class byName extends StatefulWidget  {
 class _byNameState extends State<byName>{
   int _counter = 0;
   bool showRaisedButtonBadge = true;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          leading: Badge(
-            position: BadgePosition.topEnd(top: 10, end: 10),
-            badgeContent: null,
-            child: IconButton(
+          leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.push(
@@ -31,7 +30,7 @@ class _byNameState extends State<byName>{
                 );
               },
             ),
-          ),
+
           title: Image.asset('images/transparent-logo.png',scale:5),
           centerTitle: true,
           backgroundColor: Color(0xFF9ec1a3),
@@ -56,7 +55,7 @@ class _byNameState extends State<byName>{
       animationDuration: Duration(milliseconds: 300),
       animationType: BadgeAnimationType.scale,
       badgeContent: Text(
-        _counter.toString(),
+        Styles.counter.toString(),
         style: TextStyle(color: Colors.white),
       ),
       child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {
@@ -85,7 +84,7 @@ class _byNameState extends State<byName>{
         RaisedButton.icon(
             onPressed: () {
               setState(() {
-                _counter++;
+                Styles.counter ++;
               });
             },
             icon: Icon(Icons.add),
@@ -100,7 +99,7 @@ class _byNameState extends State<byName>{
             //borderRadius: null,
             animationType: BadgeAnimationType.slide,
             badgeContent: Text(
-              _counter.toString(),
+              Styles.counter.toString(),
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -108,9 +107,9 @@ class _byNameState extends State<byName>{
 
         RaisedButton.icon(
             onPressed: () {
-              if (_counter > 0) {
+              if (Styles.counter > 0) {
                 setState(() {
-                  _counter--;
+                  Styles.counter--;
                 });
               }
             },
