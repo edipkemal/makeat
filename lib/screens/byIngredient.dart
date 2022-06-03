@@ -59,6 +59,7 @@ class _byIngredientState extends State<byIngredient> {
                             onPressed: () {
                               show = true;
                               ingredientList.add(TileButton(ingredientName: search.text.toString()));
+                              //NamePasser.ingName=search.text.toString();
                               search.clear();
                               setState(() {});
                               },
@@ -88,9 +89,9 @@ class _byIngredientState extends State<byIngredient> {
 
                 });
               },
-              child: const Text("Search"),
+              child: Text("Search",style: TextStyle(color: Styles.secondColor),),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Styles.secondColor),
+                backgroundColor: MaterialStateProperty.all(Styles.firstColor),
               ),
             ),
             _addRemoveCartButtons(),
@@ -187,16 +188,16 @@ class TileButton extends StatelessWidget {
           width: 100,
           color: Styles.secondColor,
           child: Row(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
               IconButton(
                   onPressed: () {
-                    /*
                     _byIngredientState.ingredientList.removeWhere((element){
                       return element.ingredientName == _ingredientName;
-
-                    }*/
-
+                    },
+                    );
                   },
                   icon: Icon(Icons.clear,color: Colors.white,)),
             ],
@@ -204,27 +205,35 @@ class TileButton extends StatelessWidget {
         )
     );
   }
+
+
+
+
 /*
+class NamePasser{
+  static String? ingName="";
+}
 class TileButton extends StatefulWidget {
-  final String? ingredientName;
 
   const TileButton({
     Key? key,
-    this.ingredientName,
+    required this.ingredientName,
   }) : super(key: key);
-
+  final String ingredientName;
   @override
   _TileButton createState() => _TileButton();
 
 }
 
-class _TileButton extends State<byIngredient> {
+class _TileButton extends State<TileButton> {
   @override
-  //String? ingredientName;
+
   //_TileButton({this.ingredientName});
 
   Widget build(BuildContext context) {
-    final String? _ingredientName = widget.key.toString();
+    var _ingredientName = widget.ingredientName;
+    //var _ingredientName = widget.ingredientName;
+    //final String? _ingredientName=NamePasser.ingName;
     return Padding(
         padding: EdgeInsets.all(5),
         child: Container(
@@ -232,17 +241,18 @@ class _TileButton extends State<byIngredient> {
           color: Styles.secondColor,
           child: Row(
             children: [
-              Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
+              Text(_ingredientName,style: TextStyle(color: Colors.white),),
               IconButton(
                   onPressed: () {
-                    setState(() {
 
-                    });/*
                     _byIngredientState.ingredientList.removeWhere((element){
                       return element.ingredientName == _ingredientName;
 
                     }
-                    ); */
+                    );
+                    setState(() {
+
+                    });
                   },
                   icon: Icon(Icons.clear,color: Colors.white,)),
             ],
