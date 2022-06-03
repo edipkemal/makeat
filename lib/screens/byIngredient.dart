@@ -9,7 +9,6 @@ import 'homeScreen.dart';
 class byIngredient extends StatefulWidget {
   @override
   _byIngredientState createState() => _byIngredientState();
-  static List<TileButton> ingredientList = [];
 }
 
 class _byIngredientState extends State<byIngredient> {
@@ -52,16 +51,17 @@ class _byIngredientState extends State<byIngredient> {
                             icon: Icon(Icons.clear),
                             onPressed: () {
                               search.clear();
-                              setState(() {});
                               show = false;
+                              setState(() {});
                             },
                           ),
                           IconButton(
                             onPressed: () {
                               show = true;
-                              setState(() {});
                               ingredientList.add(TileButton(ingredientName: search.text.toString()));
-                            },
+                              search.clear();
+                              setState(() {});
+                              },
                             icon: Icon(Icons.add),
                             color: Styles.secondColor,
                           ),
@@ -81,11 +81,14 @@ class _byIngredientState extends State<byIngredient> {
               children: [for (TileButton t in ingredientList) t],
             ),
 
-
-
             ElevatedButton(
-              onPressed: () {},
-              child: Text("Search"),
+              onPressed: () {
+                ingredientList.clear();
+                setState(() {
+
+                });
+              },
+              child: const Text("Search"),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Styles.secondColor),
               ),
@@ -177,33 +180,74 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _ingredientName = ingredientName;
-    return Container(
-      child: Padding(
+    final String? _ingredientName = ingredientName;
+    return Padding(
         padding: EdgeInsets.all(5),
         child: Container(
+          width: 100,
           color: Styles.secondColor,
           child: Row(
             children: [
               Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
               IconButton(
                   onPressed: () {
+                    /*
                     _byIngredientState.ingredientList.removeWhere((element){
                       return element.ingredientName == _ingredientName;
-                    }
-                    );
+
+                    }*/
+
                   },
                   icon: Icon(Icons.clear,color: Colors.white,)),
             ],
           ),
         )
-      ),
     );
-
-      /*Container(
-      color: Colors.blue,
-      //if (_ingredientName != "")
-      child: Text(_ingredientName.toString())//),
-    );*/
   }
+/*
+class TileButton extends StatefulWidget {
+  final String? ingredientName;
+
+  const TileButton({
+    Key? key,
+    this.ingredientName,
+  }) : super(key: key);
+
+  @override
+  _TileButton createState() => _TileButton();
+
+}
+
+class _TileButton extends State<byIngredient> {
+  @override
+  //String? ingredientName;
+  //_TileButton({this.ingredientName});
+
+  Widget build(BuildContext context) {
+    final String? _ingredientName = widget.key.toString();
+    return Padding(
+        padding: EdgeInsets.all(5),
+        child: Container(
+          width: 100,
+          color: Styles.secondColor,
+          child: Row(
+            children: [
+              Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+
+                    });/*
+                    _byIngredientState.ingredientList.removeWhere((element){
+                      return element.ingredientName == _ingredientName;
+
+                    }
+                    ); */
+                  },
+                  icon: Icon(Icons.clear,color: Colors.white,)),
+            ],
+          ),
+        )
+      );
+  }*/
 }
