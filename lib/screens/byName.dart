@@ -15,6 +15,10 @@ class _byNameState extends State<byName>{
   //int _counter = 0;
   //bool showRaisedButtonBadge = true;
 
+  TextEditingController search = TextEditingController();
+  var printSearch;
+  bool show=false;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -28,6 +32,53 @@ class _byNameState extends State<byName>{
 
         body: Column(
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(30),
+              child: TextField(
+                style: TextStyle(color: Styles.secondColor),
+                controller: search,
+                onChanged: (str){
+                  setState(() {
+                    str=search.text;
+                  });
+                },
+                decoration: InputDecoration(
+                  suffixIcon: Container(
+                    width: 100,
+                    child:Row(
+                      children: <Widget>[
+                        IconButton(
+                          color: Colors.red,
+                          icon:Icon(Icons.clear),
+                          onPressed: () {
+                            search.clear();
+                            setState(() {
+                            });
+                            show=false;
+                          },
+                        ),
+                        IconButton(
+                          color:Styles.secondColor,
+                          onPressed: (){
+                            show=true;
+                            setState(() {
+                            });
+                          },
+                          icon: Icon(Icons.search),
+                        ),
+                      ],
+                    ),
+                  ),
+                  border: OutlineInputBorder(),
+                  labelText: 'Search by Name',
+                  hintText: 'Enter the Food Name',
+                ),
+              )
+            ),
+            Text(""),
+                if (show) Text(search.text.toString()
+                ),
+
             _addRemoveCartButtons(),
           ],
         ),

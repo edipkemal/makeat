@@ -1,5 +1,9 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
+import 'package:makeat_mobile/main.dart';
+import 'package:makeat_mobile/style/styles.dart';
 import 'homeScreen.dart';
 
 class byIngredient extends StatefulWidget {
@@ -8,127 +12,171 @@ class byIngredient extends StatefulWidget {
 }
 
 class _byIngredientState extends State<byIngredient> {
-//Step 3
-  _byIngredientState() {
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          filteredNames = names;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
-  }
 
-//Step 1
-  final TextEditingController _filter = new TextEditingController();
-  final dio = new Dio(); // for http requests
-  String _searchText = "";
-  List names = [[]];
-  //var names = List<int>.filled(3, 0, growable: true); // names we get from API
-  //var filteredNames = List<int>.filled(3, 0, growable: true); // names filtered by search text
-  List filteredNames = [[]];
-  Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text('Search Example');
-
-  //step 2.1
-  void _getNames() async {
-    final response =
-    await dio.get('https://jsonplaceholder.typicode.com/users');
-    print(response.data);
-    //var tempList = List<int>.filled(3, 0, growable: true);
-    List tempList = [[]];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(response.data[i]);
-    }
-    setState(() {
-      names = tempList;
-      filteredNames = names;
-    });
-  }
-
-//Step 2.2
-  void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          controller: _filter,
-          decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search), hintText: 'Search...'),
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text('Search Example');
-        filteredNames = names;
-        _filter.clear();
-      }
-    });
-  }
-
-  //Step 4
-  Widget _buildList() {
-    if (!(_searchText.isEmpty)) {
-      //var tempList = List<int>.filled(3, List<String>.filled(3, 0), growable: true);
-      List tempList = [[]];
-      for (int i = 0; i < filteredNames.length; i++) {
-        if (filteredNames[i]['name']
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(filteredNames[i]);
-        }
-      }
-      filteredNames = tempList;
-    }
-    return ListView.builder(
-      itemCount: names == null ? 0 : filteredNames.length,
-      itemBuilder: (BuildContext context, int index) {
-        return new ListTile(
-          title: Text(filteredNames[index]['name']),
-          onTap: () => print(filteredNames[index]['name']),
-        );
-      },
-    );
-  }
-
-  //STep6
-  Widget _buildBar(BuildContext context) {
-    return new AppBar(
-      centerTitle: true,
-      title: _appBarTitle,
-      leading: new IconButton(
-        icon: _searchIcon,
-        onPressed: _searchPressed,
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    _getNames();
-    super.initState();
-  }
+  TextEditingController search = TextEditingController();
+  var printSearch;
+  List<TileButton> ingredientList = [];
+  bool show = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Search by Ingredient"),
-      ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: mAppBar(),
+        ),
 
-      //_buildBar(context),
-      body: Container(
-        child: _buildList(),
+
+        body: Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.all(30),
+                child: TextField(
+                  style: TextStyle(color: Styles.secondColor),
+                  controller: search,
+                  onChanged: (str) {
+                    setState(() {
+                      str = search.text;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    suffixIcon: Container(
+                      width: 100,
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            color: Colors.red,
+                            icon: Icon(Icons.clear),
+                            onPressed: () {
+                              search.clear();
+                              setState(() {});
+                              show = false;
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              show = true;
+                              setState(() {});
+                              ingredientList.add(TileButton(ingredientName: search.text.toString()));
+                            },
+                            icon: Icon(Icons.add),
+                            color: Styles.secondColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    border: OutlineInputBorder(),
+                    labelText: 'Search by Ingredient',
+                    hintText: 'Enter the Ingredient Name',
+                  ),
+                )
+            ),
+            //if (show ) TileButton(ingredientName: search.text.toString()
+            //),
+            //if (ingredientList.length!=0) Column(
+              //children: [for (TileButton t in ingredientList) t],
+            //),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text("Search"),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Styles.secondColor),
+              ),
+            ),
+            _addRemoveCartButtons(),
+          ],
+        ),
       ),
-      //resizeToAvoidBottomPadding: false,
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: _postName,
-//        child: Icon(Icons.add),
-//      ),
+    );
+  }
+
+
+  Widget _shoppingCartBadge() {
+    return Badge(
+      position: BadgePosition.topEnd(top: 0, end: 3),
+      animationDuration: Duration(milliseconds: 300),
+      animationType: BadgeAnimationType.scale,
+      badgeContent: Text(
+        Styles.counter.toString(),
+        style: TextStyle(color: Colors.white),
+      ),
+      child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }),
+    );
+  }
+
+  Widget _productImage() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Image.asset(
+        "assets/images/products.jpg",
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget _addRemoveCartButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        RaisedButton.icon(
+            onPressed: () {
+              setState(() {
+                Styles().increase();
+              });
+            },
+            icon: Icon(Icons.add),
+            label: Text("")),
+        RaisedButton(
+          color: Colors.grey,
+          onPressed: () {},
+          child: Badge(
+            badgeColor: Colors.grey,
+            position: BadgePosition.topEnd(top: 0, end: 3),
+            animationDuration: Duration(milliseconds: 300),
+            //borderRadius: null,
+            animationType: BadgeAnimationType.slide,
+            badgeContent: Text(
+              Styles.counter.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+
+        ElevatedButton.icon(
+            onPressed: () {
+              setState(() {
+                Styles().decrease();
+              });
+            },
+            icon: Icon(Icons.remove),
+            label: Text('')),
+      ],
+    );
+  }
+}
+
+class TileButton extends StatelessWidget {
+  final String? ingredientName;
+
+  const TileButton({
+    Key? key,
+    this.ingredientName,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _ingredientName = ingredientName;
+    return Container(
+      color: Colors.blue,
+      //if (_ingredientName != "")
+      child: Text(_ingredientName.toString())//),
     );
   }
 }
