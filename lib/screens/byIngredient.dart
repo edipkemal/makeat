@@ -9,13 +9,14 @@ import 'homeScreen.dart';
 class byIngredient extends StatefulWidget {
   @override
   _byIngredientState createState() => _byIngredientState();
+  static List<TileButton> ingredientList = [];
 }
 
 class _byIngredientState extends State<byIngredient> {
 
   TextEditingController search = TextEditingController();
   var printSearch;
-  List<TileButton> ingredientList = [];
+  static List<TileButton> ingredientList = [];
   bool show = false;
 
   @override
@@ -75,9 +76,13 @@ class _byIngredientState extends State<byIngredient> {
             ),
             //if (show ) TileButton(ingredientName: search.text.toString()
             //),
-            //if (ingredientList.length!=0) Column(
-              //children: [for (TileButton t in ingredientList) t],
-            //),
+
+            if (ingredientList.length !=0 ) Column(
+              children: [for (TileButton t in ingredientList) t],
+            ),
+
+
+
             ElevatedButton(
               onPressed: () {},
               child: Text("Search"),
@@ -172,11 +177,33 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ingredientName = ingredientName;
+    var _ingredientName = ingredientName;
     return Container(
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Container(
+          color: Styles.secondColor,
+          child: Row(
+            children: [
+              Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
+              IconButton(
+                  onPressed: () {
+                    _byIngredientState.ingredientList.removeWhere((element){
+                      return element.ingredientName == _ingredientName;
+                    }
+                    );
+                  },
+                  icon: Icon(Icons.clear,color: Colors.white,)),
+            ],
+          ),
+        )
+      ),
+    );
+
+      /*Container(
       color: Colors.blue,
       //if (_ingredientName != "")
       child: Text(_ingredientName.toString())//),
-    );
+    );*/
   }
 }
