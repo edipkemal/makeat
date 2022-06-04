@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:makeat_mobile/main.dart';
+import 'package:makeat_mobile/model/foodModel.dart';
 import 'package:makeat_mobile/style/styles.dart';
 import 'homeScreen.dart';
+import '../model/foodModel.dart';
+import 'package:http/http.dart' as http;
+
 
 class byName extends StatefulWidget  {
   @override
@@ -14,7 +20,7 @@ class byName extends StatefulWidget  {
 class _byNameState extends State<byName>{
   //int _counter = 0;
   //bool showRaisedButtonBadge = true;
-
+  late FoodModel foodModel;
   TextEditingController search = TextEditingController();
   var printSearch;
   bool show=false;
@@ -63,6 +69,11 @@ class _byNameState extends State<byName>{
                             show=true;
                             setState(() {
                             });
+                            /*
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ()),
+                            );*/
                           },
                           icon: Icon(Icons.search),
                         ),
@@ -80,12 +91,67 @@ class _byNameState extends State<byName>{
                 ),
 
             _addRemoveCartButtons(),
+            FutureBuilder(
+              future: getFood(),
+              builder: (context, AsyncSnapshot<FoodModel> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  debugPrint("Connection Successful");
+                  return GridView.builder(
+                    //shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    itemBuilder: (context,index){
+                      return InkWell(
+                        onTap:(){} ,
+                        child: Hero(
+                          tag: snapshot.data!.results[index].id,
+                          child: Container(
+                            width: 500,
+                            height: 500,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 200,
+                                  color: Colors.red,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+
+                } else {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                }
+              },
+
+            )
           ],
         ),
       ),
     );
   }
 
+  Future<FoodModel> getFood() async{
+    var response = await http.get(
+      Uri.parse('https://api.spoonacular.com/recipes/complexSearch?apiKey=685d0c6a39144c638a2b793a54cb0689&query=meatball'),
+    );
+    var answer = json.decode(response.body);
+    var _foodModel = FoodModel.fromJson(answer);
+
+    return _foodModel;
+  }
 
   Widget _shoppingCartBadge() {
     return Badge(
