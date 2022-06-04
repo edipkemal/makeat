@@ -21,11 +21,11 @@ class _byNameState extends State<byName>{
   //int _counter = 0;
   //bool showRaisedButtonBadge = true;
   late FoodModel foodModel;
-  //String apiKey = "82b2a55a8c5b4613a4829fc37c81884a";
+  String apiKey = "de86601f4b7a495cbcbd40cea4df7d32";
   //String apiKey = "c83822c094074ed59d28b1d962f948fb";
   //String apiKey = "49a33f02c3c8489785faad0245fa38a3";
   //String apiKey = "e70ee5507e714bb9987c331fec90c132";
-  String apiKey = "685d0c6a39144c638a2b793a54cb0689";
+  //String apiKey = "685d0c6a39144c638a2b793a54cb0689";
   TextEditingController search = TextEditingController();
   var printSearch;
   bool show=false;
@@ -41,105 +41,110 @@ class _byNameState extends State<byName>{
         ),
 
 
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(30),
-              child: TextField(
-                style: TextStyle(color: Styles.secondColor),
-                controller: search,
-                onChanged: (str){
-                  setState(() {
-                    str=search.text;
-                  });
-                },
-                decoration: InputDecoration(
-                  suffixIcon: Container(
-                    width: 100,
-                    child:Row(
-                      children: <Widget>[
-                        IconButton(
-                          color: Colors.red,
-                          icon:Icon(Icons.clear),
-                          onPressed: () {
-                            search.clear();
-                            setState(() {
-                            });
-                            show=false;
-                          },
-                        ),
-                        IconButton(
-                          color:Styles.secondColor,
-                          onPressed: (){
-                            show=true;
-                            setState(() {
-                            });
-                            /*
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.all(30),
+                  child: TextField(
+                    style: TextStyle(color: Styles.secondColor),
+                    controller: search,
+                    onChanged: (str){
+                      setState(() {
+                        str=search.text;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      suffixIcon: Container(
+                        width: 100,
+                        child:Row(
+                          children: <Widget>[
+                            IconButton(
+                              color: Colors.red,
+                              icon:Icon(Icons.clear),
+                              onPressed: () {
+                                search.clear();
+                                setState(() {
+                                });
+                                show=false;
+                              },
+                            ),
+                            IconButton(
+                              color:Styles.secondColor,
+                              onPressed: (){
+                                show=true;
+                                setState(() {
+                                });
+                                /*
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => ()),
                             );*/
-                          },
-                          icon: Icon(Icons.search),
-                        ),
-                      ],
-                    ),
-                  ),
-                  border: OutlineInputBorder(),
-                  labelText: 'Search by Name',
-                  hintText: 'Enter the Food Name',
-                ),
-              )
-            ),
-            Text(""),
-                if (show) Text(search.text.toString()
-                ),
-
-            _addRemoveCartButtons(),
-            FutureBuilder(
-              future: getFood(),
-              builder: (context, AsyncSnapshot<FoodModel> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  debugPrint("Connection Successful");
-                  return GridView.builder(
-                    itemCount:10,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                    itemBuilder: (context,index){
-                      return InkWell(
-                        onTap:(){} ,
-                        child: Hero(
-                          tag: snapshot.data!.results[index].id,
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: ListView(
-                              shrinkWrap: true,
-                              //mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.network(snapshot.data!.results[index].image),
-                              ],
+                              },
+                              icon: Icon(Icons.search),
                             ),
-                          ),
+                          ],
                         ),
-                      );
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Search by Name',
+                      hintText: 'Enter the Food Name',
+                    ),
+                  )
+              ),
+              Text(""),
+              if (show) Text(search.text.toString()
+              ),
+
+              _addRemoveCartButtons(),
+              Padding(
+                  padding: EdgeInsets.all(20),
+                  child: FutureBuilder(
+                    future: getFood(),
+                    builder: (context, AsyncSnapshot<FoodModel> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.connectionState == ConnectionState.done) {
+                        debugPrint("Connection Successful");
+                        return GridView.builder(
+                          itemCount:10,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                          itemBuilder: (context,index){
+                            return InkWell(
+                              onTap:(){} ,
+                              child: Hero(
+                                tag: snapshot.data!.results[index].id,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    //mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.network(snapshot.data!.results[index].image),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+
+                      } else {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      }
                     },
-                  );
 
-                } else {
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
-              },
-
-            )
-          ],
-        ),
+                  ),
+              )
+            ],
+          ),
+        )
       ),
     );
   }
