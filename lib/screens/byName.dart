@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:makeat_mobile/main.dart';
 import 'package:makeat_mobile/model/foodModel.dart';
+import 'package:makeat_mobile/screens/foodDetail.dart';
 import 'package:makeat_mobile/style/styles.dart';
 import 'homeScreen.dart';
 import '../model/foodModel.dart';
@@ -115,7 +116,9 @@ class _byNameState extends State<byName>{
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                           itemBuilder: (context,index){
                             return InkWell(
-                              onTap:(){} ,
+                              onTap:(){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>foodDetail(food: snapshot.data!.results[index],)));
+                              } ,
                               child: Hero(
                                 tag: snapshot.data!.results[index].id,
                                 child: Padding(
