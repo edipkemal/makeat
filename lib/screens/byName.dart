@@ -21,6 +21,11 @@ class _byNameState extends State<byName>{
   //int _counter = 0;
   //bool showRaisedButtonBadge = true;
   late FoodModel foodModel;
+  //String apiKey = "82b2a55a8c5b4613a4829fc37c81884a";
+  //String apiKey = "c83822c094074ed59d28b1d962f948fb";
+  //String apiKey = "49a33f02c3c8489785faad0245fa38a3";
+  //String apiKey = "e70ee5507e714bb9987c331fec90c132";
+  String apiKey = "685d0c6a39144c638a2b793a54cb0689";
   TextEditingController search = TextEditingController();
   var printSearch;
   bool show=false;
@@ -101,26 +106,22 @@ class _byNameState extends State<byName>{
                 } else if (snapshot.connectionState == ConnectionState.done) {
                   debugPrint("Connection Successful");
                   return GridView.builder(
-                    //shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
+                    itemCount:10,
                     shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                     itemBuilder: (context,index){
                       return InkWell(
                         onTap:(){} ,
                         child: Hero(
                           tag: snapshot.data!.results[index].id,
-                          child: Container(
-                            width: 500,
-                            height: 500,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: ListView(
+                              shrinkWrap: true,
+                              //mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 100,
-                                  height: 200,
-                                  color: Colors.red,
-                                )
+                                Image.network(snapshot.data!.results[index].image),
                               ],
                             ),
                           ),
@@ -145,7 +146,7 @@ class _byNameState extends State<byName>{
 
   Future<FoodModel> getFood() async{
     var response = await http.get(
-      Uri.parse('https://api.spoonacular.com/recipes/complexSearch?apiKey=685d0c6a39144c638a2b793a54cb0689&query=meatball'),
+      Uri.parse('https://api.spoonacular.com/recipes/complexSearch?apiKey=$apiKey&query=meatball'),
     );
     var answer = json.decode(response.body);
     var _foodModel = FoodModel.fromJson(answer);
