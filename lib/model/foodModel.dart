@@ -48,6 +48,7 @@ class Result {
   String title;
   String image;
   String imageType;
+  bool isAdded=false;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],

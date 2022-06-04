@@ -17,7 +17,7 @@ class _byIngredientState extends State<byIngredient> {
   var printSearch;
   static List<TileButton> ingredientList = [];
   bool show = false;
-
+  static bool update=false;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -77,6 +77,7 @@ class _byIngredientState extends State<byIngredient> {
             ),
             //if (show ) TileButton(ingredientName: search.text.toString()
             //),
+
             ElevatedButton(
               onPressed: () {
                 ingredientList.clear();
@@ -94,7 +95,7 @@ class _byIngredientState extends State<byIngredient> {
             ),
 
 
-            _addRemoveCartButtons(),
+            //_addRemoveCartButtons(),
           ],
         ),
       ),

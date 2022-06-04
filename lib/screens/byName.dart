@@ -16,9 +16,12 @@ import 'package:http/http.dart' as http;
 class byName extends StatefulWidget  {
   @override
   _byNameState createState() => _byNameState();
+  static bool searched=false;
+  static String name="";
 }
 
 class _byNameState extends State<byName>{
+
   //int _counter = 0;
   //bool showRaisedButtonBadge = true;
   late FoodModel foodModel;
@@ -65,16 +68,21 @@ class _byNameState extends State<byName>{
                               icon:Icon(Icons.clear),
                               onPressed: () {
                                 search.clear();
+
+                                show=false;
+                                byName.searched=false;
                                 setState(() {
                                 });
-                                show=false;
                               },
                             ),
                             IconButton(
                               color:Styles.secondColor,
                               onPressed: (){
                                 show=true;
+                                byName.name=search.text.toString();
+
                                 setState(() {
+                                  byName.searched=true;
                                 });
                                 /*
                             Navigator.push(
@@ -93,12 +101,14 @@ class _byNameState extends State<byName>{
                     ),
                   )
               ),
-              Text(""),
-              if (show) Text(search.text.toString()
-              ),
+              //Text(""),
+              //if (show) Text(search.text.toString()
+              //),
 
-              _addRemoveCartButtons(),
-              Padding(
+              //_addRemoveCartButtons(),
+
+              if (byName.searched)
+                Padding(
                   padding: EdgeInsets.all(20),
                   child: FutureBuilder(
                     future: getFood(),
@@ -128,6 +138,24 @@ class _byNameState extends State<byName>{
                                     //mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.network(snapshot.data!.results[index].image),
+                                      Row(
+                                        children: [
+                                          Text(snapshot.data!.results[index].title),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                snapshot.data!.results[index].isAdded=!(snapshot.data!.results[index].isAdded);
+                                              });
+
+                                            },
+                                            icon:
+                                            (snapshot.data!.results[index].isAdded)
+                                                ?Icon(Icons.remove)
+                                                :Icon(Icons.add),
+
+                                          )
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -144,7 +172,7 @@ class _byNameState extends State<byName>{
                     },
 
                   ),
-              )
+                )
             ],
           ),
         )
@@ -153,9 +181,13 @@ class _byNameState extends State<byName>{
   }
 
   Future<FoodModel> getFood() async{
+
+    byName.searched=false;
     var response = await http.get(
-      Uri.parse('https://api.spoonacular.com/recipes/complexSearch?apiKey=$apiKey&query=meatball'),
+      Uri.parse('https://api.spoonacular.com/recipes/complexSearch?apiKey=$apiKey&query=${byName.name}'),
     );
+
+
     var answer = json.decode(response.body);
     var _foodModel = FoodModel.fromJson(answer);
 
