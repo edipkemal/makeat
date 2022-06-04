@@ -77,11 +77,6 @@ class _byIngredientState extends State<byIngredient> {
             ),
             //if (show ) TileButton(ingredientName: search.text.toString()
             //),
-
-            if (ingredientList.length !=0 ) Column(
-              children: [for (TileButton t in ingredientList) t],
-            ),
-
             ElevatedButton(
               onPressed: () {
                 ingredientList.clear();
@@ -94,6 +89,11 @@ class _byIngredientState extends State<byIngredient> {
                 backgroundColor: MaterialStateProperty.all(Styles.firstColor),
               ),
             ),
+            if (ingredientList.length !=0 ) Column(
+              children: [for (TileButton t in ingredientList) t],
+            ),
+
+
             _addRemoveCartButtons(),
           ],
         ),
@@ -183,15 +183,22 @@ class TileButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? _ingredientName = ingredientName;
     return Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(2),
         child: Container(
-          width: 100,
-          color: Styles.secondColor,
+          constraints: const BoxConstraints(maxWidth: 200),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            color: Styles.secondColor,
+            //shape: BoxShape.circle
+          ),
+          //width: 100,
+          //color: Styles.secondColor,
           child: Row(
             //crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(_ingredientName.toString(),style: TextStyle(color: Colors.white),),
+              Text(_ingredientName.toString(),style: const TextStyle(color: Colors.white),),
+              //SizedBox(width: 10,),
               IconButton(
                   onPressed: () {
                     _byIngredientState.ingredientList.removeWhere((element){
