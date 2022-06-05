@@ -138,24 +138,7 @@ class _byNameState extends State<byName>{
                                     //mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.network(snapshot.data!.results[index].image),
-                                      Row(
-                                        children: [
-                                          Text(snapshot.data!.results[index].title),
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                snapshot.data!.results[index].isAdded=!(snapshot.data!.results[index].isAdded);
-                                              });
-
-                                            },
-                                            icon:
-                                            (snapshot.data!.results[index].isAdded)
-                                                ?Icon(Icons.remove)
-                                                :Icon(Icons.add),
-
-                                          )
-                                        ],
-                                      )
+                                      Text(snapshot.data!.results[index].title)
                                     ],
                                   ),
                                 ),

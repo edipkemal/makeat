@@ -8,7 +8,7 @@ import 'package:makeat_mobile/screens/homeScreen.dart';
 class Styles {
   static int counter = 0;
   static Color secondColor = Color(0xFF881699);
-  static Color firstColor = Color(0xFF9ec1a3);
+  static Color firstColor = Color(0xFF5C9EAD);
 
   void increase() {
     counter++;
