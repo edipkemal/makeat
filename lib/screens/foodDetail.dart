@@ -7,6 +7,7 @@ import 'package:badges/badges.dart';
 import 'package:makeat_mobile/main.dart';
 import 'package:makeat_mobile/model/foodModel.dart';
 import 'package:makeat_mobile/model/ingredientsModel.dart';
+import 'package:makeat_mobile/model/instructionModel.dart';
 import 'package:makeat_mobile/style/styles.dart';
 import 'homeScreen.dart';
 import '../model/foodModel.dart';
@@ -15,6 +16,7 @@ import 'package:http/http.dart' as http;
 class foodDetail extends StatelessWidget {
   String apiKey = "de86601f4b7a495cbcbd40cea4df7d32";
   late IngredientsModel ingredients;
+  late InstructionModel instructions;
   Result? food;
 
   foodDetail({Key? key, this.food}) : super(key: key);
@@ -64,15 +66,8 @@ class foodDetail extends StatelessWidget {
                     Column(
                       children: [
                         RaisedButton(
-                          onPressed:() {
-
-
-                          },
-                          child: Text("Ingredints",style: TextStyle(color: Colors.white)),
+                          child: Text("Ingredients",style: TextStyle(color: Colors.white)),
                           color: Styles.secondColor,
-                        ),
-                        RaisedButton(
-                          child: Text("Open Popup"),
                           onPressed: () {
                             showDialog(
                                 context: context,
@@ -131,12 +126,68 @@ class foodDetail extends StatelessWidget {
                                 });
                           },
                         ),
-                        RaisedButton(
-                          onPressed:() {
 
-                          },
+                        RaisedButton(
                           child: Text("Instructions",style: TextStyle(color: Colors.white)),
                           color: Styles.secondColor,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                    //elevation:0.0,
+                                    backgroundColor: Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: FutureBuilder(
+                                        future: getInstruction(),
+                                        builder: (context, AsyncSnapshot<InstructionModel> snapshot) {
+                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                            return Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          } else if (snapshot.connectionState == ConnectionState.done) {
+                                            debugPrint("Connection Successful");
+                                            return GridView.builder(
+                                              //itemCount: snapshot.data!.steps.length,
+                                              itemCount: 5,
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.vertical,
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+                                              itemBuilder: (context,index){
+                                                return Padding(
+                                                  padding: EdgeInsets.all(1),
+                                                  child: Stack(
+                                                    //shrinkWrap: true,
+                                                    //mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Row(children: [
+                                                        //Text(snapshot.data!.steps[index].number.toString()),
+                                                        Text("food id: "),
+                                                        Text(food!.id.toString()),
+                                                        //Text(snapshot.data!.toString()),
+                                                        //Text(snapshot.data!.steps[index].step),
+                                                      ],)
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+
+                                          } else {
+                                            return Center(
+                                                child: Container(color: Colors.blue,height: 100,width: 100,)
+                                            );
+                                          }
+                                        },
+
+                                      ),
+                                    ),
+
+                                  );
+                                });
+                          },
                         ),
                       ],
                     ),
@@ -175,14 +226,27 @@ class foodDetail extends StatelessWidget {
 
   Future<IngredientsModel> getIngredients() async{
     var response = await http.get(
-      Uri.parse('https://api.spoonacular.com/recipes/651342/ingredientWidget.json?apiKey=$apiKey'),
+      Uri.parse('https://api.spoonacular.com/recipes/${food!.id.toString()}/ingredientWidget.json?apiKey=$apiKey'),
     );
 
 
-    var answer = json.decode(response.body);
-    var _ingredientsModel = IngredientsModel.fromJson(answer);
+    var _answer = json.decode(response.body);
+    var _ingredientsModel = IngredientsModel.fromJson(_answer);
 
     return _ingredientsModel;
   }
+
+  Future<InstructionModel> getInstruction() async{
+    var response = await http.get(
+      Uri.parse('https://api.spoonacular.com/recipes/${food!.id.toString()}/analyzedInstructions?apiKey=$apiKey'),
+    );
+
+
+    var _answer = json.decode(response.body);
+    var _instructionModel = InstructionModel.fromJson(_answer);
+
+    return _instructionModel;
+  }
+
 }
 
