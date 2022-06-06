@@ -97,7 +97,7 @@ class _byIngredientState extends State<byIngredient> {
 
                   });
                 },
-                child: Text("Search",style: TextStyle(color: Styles.secondColor),),
+                child: Text("Search",style: TextStyle(color: Colors.white),),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Styles.firstColor),
                 ),
